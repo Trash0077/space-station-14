@@ -1,7 +1,8 @@
 - type: reagent
   id: chem.Flour
-  name: Flour
+  name: flour
   desc: Used for baking.
+  physicalDesc: powdery
   color: "#FFFFFF"
   metabolism:
     - !type:DefaultFood

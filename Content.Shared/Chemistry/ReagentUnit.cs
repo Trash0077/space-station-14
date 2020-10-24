@@ -1,7 +1,7 @@
-﻿using Robust.Shared.Interfaces.Serialization;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
+using Robust.Shared.Interfaces.Serialization;
 
 namespace Content.Shared.Chemistry
 {
@@ -30,11 +30,6 @@ namespace Content.Shared.Chemistry
             return new ReagentUnit(value * (int) Math.Pow(10, Shift));
         }
 
-        public static ReagentUnit New(decimal value)
-        {
-            return new ReagentUnit((int) Math.Round(value * (decimal) Math.Pow(10, Shift), MidpointRounding.AwayFromZero));
-        }
-
         public static ReagentUnit New(float value)
         {
             return new ReagentUnit(FromFloat(value));
@@ -42,7 +37,7 @@ namespace Content.Shared.Chemistry
 
         private static int FromFloat(float value)
         {
-            return (int) Math.Round(value * (float) Math.Pow(10, Shift), MidpointRounding.AwayFromZero);
+            return (int) MathF.Round(value * MathF.Pow(10, Shift), MidpointRounding.AwayFromZero);
         }
 
         public static ReagentUnit New(double value)
@@ -83,12 +78,6 @@ namespace Content.Shared.Chemistry
             return New(aD * b);
         }
 
-        public static ReagentUnit operator *(ReagentUnit a, decimal b)
-        {
-            var aD = (decimal) a.ShiftDown();
-            return New(aD * b);
-        }
-
         public static ReagentUnit operator *(ReagentUnit a, double b)
         {
             var aD = a.ShiftDown();
@@ -121,14 +110,24 @@ namespace Content.Shared.Chemistry
             return a.ShiftDown() >= b;
         }
 
+        public static bool operator <(ReagentUnit a, int b)
+        {
+            return a.ShiftDown() < b;
+        }
+
+        public static bool operator >(ReagentUnit a, int b)
+        {
+            return a.ShiftDown() > b;
+        }
+
         public static bool operator ==(ReagentUnit a, int b)
         {
-            return a.ShiftDown() == b;
+            return a.Int() == b;
         }
 
         public static bool operator !=(ReagentUnit a, int b)
         {
-            return a.ShiftDown() != b;
+            return a.Int() != b;
         }
 
         public static bool operator ==(ReagentUnit a, ReagentUnit b)
@@ -166,11 +165,6 @@ namespace Content.Shared.Chemistry
             return (float) ShiftDown();
         }
 
-        public decimal Decimal()
-        {
-            return (decimal) ShiftDown();
-        }
-
         public double Double()
         {
             return ShiftDown();
@@ -189,6 +183,21 @@ namespace Content.Shared.Chemistry
         public static ReagentUnit Min(ReagentUnit a, ReagentUnit b)
         {
             return a < b ? a : b;
+        }
+
+        public static ReagentUnit Max(ReagentUnit a, ReagentUnit b)
+        {
+            return a > b ? a : b;
+        }
+
+        public static ReagentUnit Clamp(ReagentUnit reagent, ReagentUnit min, ReagentUnit max)
+        {
+            if (min > max)
+            {
+                throw new ArgumentException($"{nameof(min)} {min} cannot be larger than {nameof(max)} {max}");
+            }
+
+            return reagent < min ? min : reagent > max ? max : reagent;
         }
 
         public override bool Equals(object obj)

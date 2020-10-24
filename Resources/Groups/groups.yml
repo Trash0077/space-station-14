@@ -12,11 +12,14 @@
   - observe
   - toggleready
   - ghost
+  - suicide
+  - hostlogin
 
 - Index: 50
   Name: Moderator
   Commands:
   - login
+  - logout
   - joingame
   - help
   - list
@@ -28,13 +31,19 @@
   - observe
   - toggleready
   - ghost
+  - suicide
   - kick
   - listplayers
   - loc
+  - hostlogin
+  - events
+  - factions
+  CanAdminMenu: true
 
 - Index: 100
   Name: Administrator
   Commands:
+  - logout
   - joingame
   - help
   - list
@@ -47,17 +56,21 @@
   - observe
   - toggleready
   - ghost
+  - suicide
   - spawn
   - delete
   - tp
   - tpgrid
   - setgamepreset
+  - forcepreset
+  - delaystart
   - startround
   - endround
   - restartround
   - respawn
   - rejuvenate
   - addcomp
+  - rmcomp
   - controlmob
   - kick
   - listplayers
@@ -67,15 +80,43 @@
   - mindinfo
   - addrole
   - rmrole
+  - addoverlay
+  - rmoverlay
   - showtime
   - group
   - addai
+  - warp
+  - hostlogin
+  - deleteewc
+  - asay
+  - mapping
+  - addhand
+  - removehand
+  - tilepry
+  - anchor
+  - unanchor
+  - tubeconnections
+  - tilewalls
+  - events
+  - destroymechanism
+  - addaccent
+  - readyall
+  - factions
+  - signallink
+  - adddamageflag
+  - removedamageflag
+  - godmode
+  - deleteewi
+  - hurt
+  - toggledisallowlatejoin
   CanViewVar: true
   CanAdminPlace: true
+  CanAdminMenu: true
 
 - Index: 200
   Name: Host
   Commands:
+  - logout
   - joingame
   - help
   - list
@@ -88,11 +129,14 @@
   - observe
   - toggleready
   - ghost
+  - suicide
   - spawn
   - delete
   - tp
   - tpgrid
   - setgamepreset
+  - forcepreset
+  - delaystart
   - startround
   - endround
   - restartround
@@ -108,6 +152,8 @@
   - mindinfo
   - addrole
   - rmrole
+  - addoverlay
+  - rmoverlay
   - srvpopupmsg
   - group
   - showtime
@@ -132,6 +178,40 @@
   - saveconfig
   - gc
   - gc_mode
+  - warp
+  - deleteewc
+  - sudo
+  - asay
+  - mapping
+  - addhand
+  - removehand
+  - tilepry
+  - anchor
+  - unanchor
+  - tubeconnections
+  - addatmos
+  - addgas
+  - fillgas
+  - listgases
+  - removegas
+  - settemp
+  - setatmostemp
+  - deletegas
+  - showatmos
+  - tilewalls
+  - events
+  - destroymechanism
+  - addaccent
+  - readyall
+  - factions
+  - signallink
+  - adddamageflag
+  - removedamageflag
+  - godmode
+  - deleteewi
+  - hurt
+  - toggledisallowlatejoin
   CanViewVar: true
   CanAdminPlace: true
   CanScript: true
+  CanAdminMenu: true

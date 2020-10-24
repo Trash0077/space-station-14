@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Content.Client.Command;
 using Content.Shared.GameObjects.Components.Command;
 using Robust.Client.GameObjects.Components.UserInterface;
@@ -11,10 +11,9 @@ namespace Content.Client.GameObjects.Components.Command
 {
     public class CommunicationsConsoleBoundUserInterface : BoundUserInterface
     {
-        [ViewVariables]
-        private CommunicationsConsoleMenu _menu;
+        [Dependency] private readonly IGameTiming _gameTiming = default!;
 
-        [Dependency] private IGameTiming _gameTiming;
+        [ViewVariables] private CommunicationsConsoleMenu _menu;
 
         public bool CountdownStarted { get; private set; }
 
@@ -55,13 +54,6 @@ namespace Content.Client.GameObjects.Components.Command
             SendMessage(new CommunicationsConsoleRecallEmergencyShuttleMessage());
         }
 
-        protected override void ReceiveMessage(BoundUserInterfaceMessage message)
-        {
-            switch (message)
-            {
-            }
-        }
-
         protected override void UpdateState(BoundUserInterfaceState state)
         {
             if (!(state is CommunicationsConsoleInterfaceState commsState))
@@ -77,6 +69,7 @@ namespace Content.Client.GameObjects.Components.Command
         {
             base.Dispose(disposing);
             if (!disposing) return;
+
             _menu?.Dispose();
         }
     }

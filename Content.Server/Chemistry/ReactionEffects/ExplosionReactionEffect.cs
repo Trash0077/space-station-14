@@ -1,7 +1,7 @@
 ﻿using System;
 using Content.Server.Explosions;
 using Content.Server.GameObjects.Components.Chemistry;
-using Content.Shared.Interfaces;
+using Content.Server.Interfaces.Chemistry;
 using Robust.Shared.Interfaces.GameObjects;
 using Robust.Shared.Serialization;
 
@@ -35,18 +35,18 @@ namespace Content.Server.Chemistry.ReactionEffects
             serializer.DataField(ref _maxScale, "maxScale", 1);
         }
 
-        public void React(IEntity solutionEntity, decimal intensity)
+        public void React(IEntity solutionEntity, double intensity)
         {
-            float floatIntensity = (float)intensity; 
+            float floatIntensity = (float)intensity;
             if (solutionEntity == null)
                 return;
-            if(!solutionEntity.TryGetComponent(out SolutionComponent solution))
+            if(!solutionEntity.TryGetComponent(out SolutionContainerComponent solution))
                 return;
 
             //Handle scaling
             if (_scaled)
             {
-                floatIntensity = Math.Min(floatIntensity, _maxScale);
+                floatIntensity = MathF.Min(floatIntensity, _maxScale);
             }
             else
             {
@@ -54,11 +54,11 @@ namespace Content.Server.Chemistry.ReactionEffects
             }
 
             //Calculate intensities
-            int finalDevastationRange = (int)Math.Round(_devastationRange * floatIntensity);
-            int finalHeavyImpactRange = (int)Math.Round(_heavyImpactRange * floatIntensity);
-            int finalLightImpactRange = (int)Math.Round(_lightImpactRange * floatIntensity);
-            int finalFlashRange = (int)Math.Round(_flashRange * floatIntensity);
-            ExplosionHelper.SpawnExplosion(solutionEntity.Transform.GridPosition, finalDevastationRange,
+            int finalDevastationRange = (int)MathF.Round(_devastationRange * floatIntensity);
+            int finalHeavyImpactRange = (int)MathF.Round(_heavyImpactRange * floatIntensity);
+            int finalLightImpactRange = (int)MathF.Round(_lightImpactRange * floatIntensity);
+            int finalFlashRange = (int)MathF.Round(_flashRange * floatIntensity);
+            ExplosionHelper.SpawnExplosion(solutionEntity.Transform.Coordinates, finalDevastationRange,
                 finalHeavyImpactRange, finalLightImpactRange, finalFlashRange);
         }
     }

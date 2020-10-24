@@ -1,22 +1,26 @@
 ﻿using System;
-using Content.Shared.Input;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Input;
 using Robust.Shared.Maths;
 
-namespace Content.Client.GameObjects
+namespace Content.Client.UserInterface
 {
-    public sealed class ItemSlotButton : MarginContainer
+    public class ItemSlotButton : MarginContainer
     {
         public TextureRect Button { get; }
         public SpriteView SpriteView { get; }
+        public SpriteView HoverSpriteView { get; }
         public BaseButton StorageButton { get; }
-        public TextureRect CooldownCircle { get; }
+        public CooldownGraphic CooldownDisplay { get; }
 
         public Action<GUIBoundKeyEventArgs> OnPressed { get; set; }
         public Action<GUIBoundKeyEventArgs> OnStoragePressed { get; set; }
+        public Action<GUIMouseHoverEventArgs> OnHover { get; set; }
+
+        public bool EntityHover => HoverSpriteView.Sprite != null;
+        public bool MouseIsHovering = false;
 
         public ItemSlotButton(Texture texture, Texture storageTexture)
         {
@@ -32,6 +36,12 @@ namespace Content.Client.GameObjects
             Button.OnKeyBindDown += OnButtonPressed;
 
             AddChild(SpriteView = new SpriteView
+            {
+                Scale = (2, 2),
+                OverrideDirection = Direction.South
+            });
+
+            AddChild(HoverSpriteView = new SpriteView
             {
                 Scale = (2, 2),
                 OverrideDirection = Direction.South
@@ -56,14 +66,33 @@ namespace Content.Client.GameObjects
 
             StorageButton.OnPressed += OnStorageButtonPressed;
 
-            AddChild(CooldownCircle = new TextureRect
+            Button.OnMouseEntered += _ =>
             {
-                SizeFlagsHorizontal = SizeFlags.ShrinkCenter,
-                SizeFlagsVertical = SizeFlags.ShrinkCenter,
-                Stretch = TextureRect.StretchMode.KeepCentered,
-                TextureScale = (2, 2),
+                MouseIsHovering = true;
+            };
+            Button.OnMouseEntered += OnButtonHover;
+
+            Button.OnMouseExited += _ =>
+            {
+                MouseIsHovering = false;
+                ClearHover();
+            };
+
+            AddChild(CooldownDisplay = new CooldownGraphic
+            {
+                SizeFlagsHorizontal = SizeFlags.Fill,
+                SizeFlagsVertical = SizeFlags.Fill,
                 Visible = false,
             });
+        }
+
+        public void ClearHover()
+        {
+            if (EntityHover)
+            {
+                HoverSpriteView.Sprite?.Owner.Delete();
+                HoverSpriteView.Sprite = null;
+            }
         }
 
         private void OnButtonPressed(GUIBoundKeyEventArgs args)
@@ -81,6 +110,11 @@ namespace Content.Client.GameObjects
             {
                 OnPressed?.Invoke(args.Event);
             }
+        }
+
+        private void OnButtonHover(GUIMouseHoverEventArgs args)
+        {
+            OnHover?.Invoke(args);
         }
     }
 }
